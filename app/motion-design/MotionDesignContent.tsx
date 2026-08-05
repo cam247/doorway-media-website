@@ -3,12 +3,8 @@ import ProjectGrid from "@/app/components/ProjectGrid";
 import { projectsIn } from "@/app/lib/projects.server";
 
 /**
- * Display order for this page's two finished pieces. The folder scan sorts by
- * file size, which would open with Air Max; Red Bull leads instead.
- *
- * These match the titles the scan derives from the filenames. Nothing is
- * filtered by this list — a clip added to the folder that isn't named here still
- * gets a tile, it just sits after the two below.
+ * Display order for this page's two finished pieces. The catalog lists Air Max
+ * first (lighter file); Red Bull leads the page instead.
  */
 const ORDER = ["Red Bull Short", "Air Max Short"];
 
@@ -17,7 +13,6 @@ const place = (title: string) => {
   return at === -1 ? ORDER.length : at;
 };
 
-/** Read from public/Video files/Motion & 3D/ at build time. */
 const items = projectsIn("Motion Design & 3D").sort(
   (a, b) => place(a.title) - place(b.title)
 );

@@ -2,41 +2,37 @@
 
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
+import { mediaUrl } from "@/app/lib/media";
 import { reveal, VIEWPORT } from "@/app/lib/motion";
 
 /**
- * Client logos, served from `public/Featured With (Logos)/`.
- *
- * Those files are the masters in `public/Clients Logo/` with their transparent
- * margins cropped off. The margins varied enormously — the Indiana mark occupied
- * barely half of its 1080x1350 canvas — which made the logos render at wildly
- * different visual sizes no matter how the box was set. Cropping to the artwork
- * is what makes one shared box work.
+ * Client logos from the Supabase Videos bucket (flat filenames matching the
+ * uploads). Fitted with object-contain into a shared box so uneven transparent
+ * margins don't throw the sizes off.
  *
  * SEC Nation is deliberately absent: its master sets "NATION" in white, which is
- * invisible against this near-white band. `sec-nation.png` is trimmed and
- * waiting in the same folder for whenever a dark-ink version arrives.
+ * invisible against this near-white band.
  */
 type Brand = { name: string; src: string; width: number; height: number };
 
 const brands: Brand[] = [
   {
     name: "ESPN College GameDay",
-    src: "/Featured%20With%20(Logos)/espn-college-gameday.png",
-    width: 228,
-    height: 296,
+    src: mediaUrl("2025_College_GameDay_logo.png"),
+    width: 800,
+    height: 800,
   },
   {
     name: "NCAA",
-    src: "/Featured%20With%20(Logos)/ncaa.png",
+    src: mediaUrl("NCAA_logo.svg.webp"),
     width: 784,
     height: 784,
   },
   {
     name: "Get In Indiana",
-    src: "/Featured%20With%20(Logos)/get-in-indiana.png",
-    width: 538,
-    height: 836,
+    src: mediaUrl("Get in.png"),
+    width: 800,
+    height: 1000,
   },
 ];
 

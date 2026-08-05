@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
+import { mediaUrl } from "@/app/lib/media";
 import { navLinks, serviceLinks } from "@/app/lib/site-data";
 import { DUR_EXIT, EASE } from "@/app/lib/motion";
 
@@ -63,7 +64,7 @@ export default function Navigation() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
         <Link href="/" className="flex shrink-0 items-center gap-2.5">
           <Image
-            src="/Doorway Media Transparent.png"
+            src={mediaUrl("Doorway Media Transparent.png")}
             alt="Doorway Media home"
             width={48}
             height={48}

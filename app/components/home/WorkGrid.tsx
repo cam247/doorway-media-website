@@ -11,6 +11,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import VideoSequence from "@/app/components/VideoSequence";
+import { mediaUrl } from "@/app/lib/media";
 import type { CategoryName } from "@/app/lib/projects";
 import { categoryHrefs } from "@/app/lib/site-data";
 import { DUR_EXIT, EASE, reveal, stagger, VIEWPORT } from "@/app/lib/motion";
@@ -21,15 +22,7 @@ import { DUR_EXIT, EASE, reveal, stagger, VIEWPORT } from "@/app/lib/motion";
  *
  * Display order: Videography, Motion Design & 3D (centre), Drone Video (right).
  *
- * What plays behind each panel is named here rather than scanned from the
- * category's folder — this is a client component (hover state), and a panel
- * wants the footage that sells the category, not whichever file happens to be
- * smallest. The cost is that a panel goes blank if a file it names is renamed or
- * removed, so these paths want checking whenever the folders change.
- *
- * Each panel matches how its own page opens: a single clip loops, several play
- * in turn, and a pre-built reel covers a category with too much footage to cycle
- * in the browser.
+ * Background clips match each category page and are served from Supabase.
  */
 const services: {
   category: CategoryName;
@@ -41,9 +34,7 @@ const services: {
     category: "Videography",
     tagline: "Award Winning Videos",
     icon: Camera,
-    /* Ten seconds of each videography piece. Same reel the category page opens
-       with, rebuilt by `npm run reel -- Videography`. */
-    video: "/Reels/videography-reel.mp4",
+    video: mediaUrl("videography-reel.mp4"),
   },
   {
     category: "Motion Design & 3D",
@@ -51,15 +42,15 @@ const services: {
     icon: Boxes,
     /* Both pieces, Red Bull first, as on /motion-design. */
     video: [
-      "/Video%20files/Motion%20&%203D/Red%20Bull%20Short.mp4",
-      "/Video%20files/Motion%20&%203D/Air%20Max%20Short.mp4",
+      mediaUrl("Red Bull Short.mp4"),
+      mediaUrl("Air Max Short.mp4"),
     ],
   },
   {
     category: "Drone Video",
     tagline: "Cinematic Aerial Video",
     icon: Plane,
-    video: "/Video%20files/Drone/Legal%20Acres%20Flyover.mp4",
+    video: mediaUrl("Legal Acres Flyover.mp4"),
   },
 ];
 

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import VideoTile from "@/app/components/VideoTile";
+import { mediaUrl } from "@/app/lib/media";
 import { DUR_ENTER, EASE } from "@/app/lib/motion";
 import { serviceLinks } from "@/app/lib/site-data";
 
@@ -23,7 +24,7 @@ export default function Hero() {
           desktop width it trims a few percent off the sides rather than off the
           top and bottom. Shortening the band goes back to cropping vertically. */}
       <div className="relative h-[40vh] min-h-[240px] w-full overflow-hidden md:h-[58vh] lg:h-[64vh]">
-        <VideoTile src="/Main%20Page%20Video_V4.mp4" eager />
+        <VideoTile src={mediaUrl("Main Page Video_V4.mp4")} eager />
       </div>
 
       <div className="mx-auto max-w-7xl px-6 pb-20 pt-8 md:pb-28 md:pt-10 lg:px-10">

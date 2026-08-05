@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { mediaUrl } from "@/app/lib/media";
 import { serviceLinks, socialLinks } from "@/app/lib/site-data";
 
 function SocialGlyph({ name }: { name: string }) {
@@ -29,7 +30,7 @@ export default function Footer() {
           <div className="md:col-span-4">
             <Link href="/" className="flex items-center gap-2.5">
               <Image
-                src="/Doorway Media Transparent.png"
+                src={mediaUrl("Doorway Media Transparent.png")}
                 alt=""
                 width={36}
                 height={36}

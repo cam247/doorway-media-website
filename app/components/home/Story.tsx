@@ -2,11 +2,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { Award, ArrowRight, Trophy } from "lucide-react";
 import Reveal from "@/app/components/Reveal";
+import { mediaUrl } from "@/app/lib/media";
 
 const storyPhotos = [
-  { src: "/DSC07266.jpg", alt: "Cinematographer framing a shot on location" },
-  { src: "/DSC07272.jpg", alt: "Camera rig set up during a live event shoot" },
-  { src: "/DSC07350.jpg", alt: "Behind the scenes on a Doorway Media production" },
+  {
+    src: mediaUrl("DSC07266.jpg"),
+    alt: "Cinematographer framing a shot on location",
+  },
+  {
+    src: mediaUrl("DSC07272.jpg"),
+    alt: "Camera rig set up during a live event shoot",
+  },
+  {
+    src: mediaUrl("DSC07350.jpg"),
+    alt: "Behind the scenes on a Doorway Media production",
+  },
 ];
 
 const awards = [

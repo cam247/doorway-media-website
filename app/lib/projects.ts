@@ -1,10 +1,8 @@
 /**
- * Project types, and the mapping from a service category to the folder its
- * footage lives in.
+ * Project types shared by the tile grid and the full-screen player.
  *
- * Deliberately free of any Node imports: this module is pulled into client
- * components (the tile grid, the player) for its types. The filesystem scan that
- * builds the actual project lists is in `projects.server.ts`.
+ * The catalog itself lives in `projects.server.ts` (imported only from Server
+ * Components) so the client bundle never pulls the full list twice.
  */
 
 export type CategoryName =
@@ -24,25 +22,8 @@ export type Project = {
   /** The only text drawn over the tile. A title, never a paragraph. */
   title: string;
   category: CategoryName;
-  /** URL-encoded path under public/. */
+  /** Absolute URL to the clip (Supabase Storage). */
   video: string;
   /** Absent where the credit isn't recorded yet; the player just omits it. */
   credit?: ProjectCredit;
-};
-
-/**
- * Category → its subfolder under `public/Video files/`.
- *
- * This is the whole configuration for what appears on a category page. Drop a
- * new clip into one of these folders and it becomes a tile on the next build —
- * no list to update here.
- *
- * Adding a category means adding it to `CategoryName`, to this map, and to
- * `categoryHrefs` in `site-data.ts`; the types make each of those a compile
- * error until it's done.
- */
-export const CATEGORY_FOLDERS: Record<CategoryName, string> = {
-  Videography: "Videography",
-  "Drone Video": "Drone",
-  "Motion Design & 3D": "Motion & 3D",
 };

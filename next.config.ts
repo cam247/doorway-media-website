@@ -1,10 +1,17 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // No remote image hosts are needed: every image and video is served from
-  // public/. `remotePatterns` previously whitelisted images.unsplash.com for the
-  // placeholder stills — those are gone, so the entry is removed rather than
-  // left open (`configure-remote-image-domains`: whitelist, never allow-all).
+  images: {
+    // Story photos, logos, and the wordmark are on Supabase Storage.
+    // (`configure-remote-image-domains`: whitelist, never allow-all.)
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "olegixjqnmghjskciikm.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
