@@ -1,0 +1,345 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════
+   Doorway Media — Design System
+   Source: ui-ux-pro-max skill
+     · Style:   Minimalism + Motion-Driven, surfaced with light Glassmorphism
+     · Palette: colors.csv → "Architecture / Interior"
+                (Minimal black + accent gold), on white
+     · Type:    typography.csv → "Bold Statement" (Bebas Neue display)
+     · Pattern: landing.csv → "Portfolio Grid"
+
+   Rules honoured here:
+     `color-semantic`       — semantic tokens only, never raw hex in components
+     `color-accessible-pairs` — every fg/bg pair below is annotated with its ratio
+     `dark-mode-pairing`    — media-overlay tokens are separate from page tokens,
+                              so text over video never inherits page colours
+   ═══════════════════════════════════════════════════════════ */
+
+@theme {
+  /* ── Page surfaces ── */
+  --color-bg: #ffffff;
+  --color-surface: #f8fafc;
+  --color-surface-2: #f1f5f9;
+  --color-muted: #f1f5f9;
+
+  /* ── Foreground (ratios vs --color-bg) ── */
+  --color-ink: #000000; /* 21:1    AAA — true black, wordmark only */
+  --color-fg: #0f172a; /* 17.9:1  AAA */
+  --color-fg-muted: #475569; /*  7.6:1  AAA */
+  --color-fg-subtle: #64748b; /*  4.8:1  AA  */
+
+  /* ── Lines ── */
+  --color-line: #e2e8f0;
+  --color-line-strong: #cbd5e1;
+
+  /* ── Brand accent ──
+     Gold on white needs the WCAG-adjusted tone: #d4af37 is only 1.9:1.
+     `--color-gold`        4.9:1 on white — safe for text, icons, focus rings
+     `--color-gold-bright` reserved for use over dark media only            */
+  --color-gold: #a16207;
+  --color-gold-bright: #d4af37;
+
+  /* ── Text and chrome that sit ON video/imagery ──
+     Media always carries a dark scrim, so these stay light in every theme. */
+  --color-on-media: #ffffff;
+  --color-on-media-muted: #e2e8f0;
+
+  /* ── Semantic ── */
+  --color-danger: #dc2626;
+  --color-success: #16a34a;
+
+  /* ── Motion tokens (motion.csv). `motion-consistency`: one rhythm. ── */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-micro: 200ms; /* Hover Micro-interaction [Standard] */
+  --dur-enter: 500ms; /* Scroll Reveal [Standard]           */
+  --dur-exit: 320ms; /* `exit-faster-than-enter` ≈ 65%     */
+
+  /* ── Glassmorphism, light variant ──
+     styles.csv checklist: blur 10-20px, translucent fill, 1px border.
+     Fill is white-translucent; the border switches to a hairline ink tint
+     because white-on-white borders disappear on a light page.            */
+  --glass-blur: 16px;
+  --glass-fill: rgba(255, 255, 255, 0.66);
+  --glass-fill-strong: rgba(255, 255, 255, 0.86);
+  --glass-line: rgba(15, 23, 42, 0.08);
+}
+
+/* ── Z-index scale. `z-index-management`: fixed scale, no arbitrary values.
+      10 content · 20 media overlay · 30 dropdown · 50 sticky nav ·
+      60 modal (the full-screen video player, which must clear the nav) ── */
+
+/* ─── Base ─────────────────────────────────────────────── */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  color-scheme: light;
+}
+
+/* Where an anchored section comes to rest.
+   
+   Every section already carries 64-128px of its own top padding, which on its
+   own clears the 81px sticky header. Adding a full header's height on top of
+   that stacked up: a jump to #story used to leave ~143px of dead white above
+   the heading while shoving the end of the section off the bottom of the
+   screen. These values only top up what the padding doesn't cover, so a section
+   lands filling the frame instead of hanging off it. The smaller screen needs
+   the larger figure because its padding is the tighter of the two. */
+section[id] {
+  scroll-margin-top: 2rem;
+}
+
+@media (min-width: 768px) {
+  section[id] {
+    scroll-margin-top: 1rem;
+  }
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-body), "Inter", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", system-ui, sans-serif;
+  /* `readable-font-size`: 16px floor. `line-height 1.5` per priority 6. */
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--color-gold) 22%, transparent);
+  color: var(--color-fg);
+}
+
+/* `focus-states` — visible ring on every interactive element. Never removed.
+   Gold at 4.9:1 clears the 3:1 minimum for non-text indicators. */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Over dark media a light ring is the legible one. Matches the marked element
+   itself as well as its descendants — the panel links carry the class directly. */
+.on-media:focus-visible,
+.on-media :focus-visible {
+  outline-color: var(--color-on-media);
+}
+
+/* ─── Typography ───────────────────────────────────────── */
+
+/* "Bold Statement" pairing: Bebas Neue for display, Inter for body.
+   Bebas is uppercase-only by design and ships a single weight (400). */
+.display,
+.display-xl,
+.display-lg,
+.display-md {
+  font-family: var(--font-display), "Bebas Neue", Impact, sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.display-xl {
+  letter-spacing: 0.005em;
+  line-height: 0.88;
+}
+
+.display-lg {
+  letter-spacing: 0.012em;
+  line-height: 0.93;
+}
+
+.display-md {
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+/* Homepage wordmark — clean modern sans (Inter), not the Bebas display face.
+   Heavy weight plus tight negative tracking is what makes uppercase Inter read
+   as a wordmark rather than as body copy.
+
+   The clamp is sized so "DOORWAY MEDIA" stays on one line at every width:
+   uppercase Inter Black runs roughly 8.4em wide at this tracking, and the 7.5rem
+   ceiling keeps that inside the max-w-7xl content column. It is allowed to wrap
+   rather than forced nowrap, so an unexpected metric can never cause overflow. */
+.hero-wordmark {
+  font-family: var(--font-body), "Inter", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", system-ui, sans-serif;
+  font-size: clamp(2.25rem, 9vw, 7.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+/* Label, not body copy — held at 12px so it clears the <12px anti-pattern. */
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-fg-muted);
+  line-height: 1.4;
+}
+
+/* `letter-spacing`: no tight tracking on body copy. */
+.lede {
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.65;
+  color: var(--color-fg-muted);
+}
+
+/* ─── Glass surfaces ──────────────────────────────────────
+   styles.csv → Glassmorphism: blur 10-20px, translucent fill,
+   1px border, text contrast verified. */
+
+.glass {
+  background-color: var(--glass-fill);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  border: 1px solid var(--glass-line);
+}
+
+.glass-strong {
+  background-color: var(--glass-fill-strong);
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  border: 1px solid var(--glass-line);
+}
+
+/* Sticky nav rides over the hero reel, so the fill runs heavier than the
+   card glass to keep dark nav text legible against bright footage. */
+.glass-nav {
+  background-color: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .glass,
+  .glass-strong,
+  .glass-nav {
+    background-color: rgba(255, 255, 255, 0.96);
+  }
+}
+
+/* ─── Components ───────────────────────────────────────── */
+
+/* `transform-performance` + Hover Micro-interaction [Subtle]:
+   displacement under 2px, transform/opacity only. */
+.pill {
+  border: 1px solid var(--color-line-strong);
+  background-color: var(--color-bg);
+  transition: border-color var(--dur-micro) var(--ease-out-quint),
+    color var(--dur-micro) var(--ease-out-quint),
+    box-shadow var(--dur-micro) var(--ease-out-quint),
+    transform var(--dur-micro) var(--ease-out-quint);
+}
+
+.pill:hover {
+  border-color: var(--color-gold);
+  color: var(--color-fg);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.07);
+  transform: translateY(-1px);
+}
+
+/* `elevation-consistent`: one shadow scale for every raised surface. */
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-line);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04),
+    0 10px 30px rgba(15, 23, 42, 0.07);
+  transition: border-color var(--dur-micro) var(--ease-out-quint),
+    box-shadow var(--dur-micro) var(--ease-out-quint),
+    transform var(--dur-micro) var(--ease-out-quint);
+}
+
+.card:hover {
+  border-color: var(--color-line-strong);
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.05),
+    0 20px 48px rgba(15, 23, 42, 0.13);
+  transform: translateY(-2px);
+}
+
+.award-card {
+  border: 1px solid color-mix(in srgb, var(--color-gold) 26%, transparent);
+  background: linear-gradient(
+    160deg,
+    var(--color-bg) 0%,
+    color-mix(in srgb, var(--color-gold) 6%, var(--color-bg)) 100%
+  );
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: border-color var(--dur-micro) var(--ease-out-quint),
+    box-shadow var(--dur-micro) var(--ease-out-quint),
+    transform var(--dur-micro) var(--ease-out-quint);
+}
+
+.award-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--color-gold) 16%, transparent);
+  transform: translateY(-2px);
+}
+
+.quote-box {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-left: 3px solid var(--color-gold);
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.06);
+}
+
+/* ─── Form ─────────────────────────────────────────────── */
+
+.field {
+  width: 100%;
+  border: 1px solid var(--color-line-strong);
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  /* 16px floor also stops iOS Safari from zooming on focus. */
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: border-color var(--dur-micro) var(--ease-out-quint),
+    box-shadow var(--dur-micro) var(--ease-out-quint);
+}
+
+.field::placeholder {
+  color: var(--color-fg-subtle);
+}
+
+.field:focus-visible {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold) 20%, transparent);
+}
+
+.field[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+/* ─── Reduced motion ──────────────────────────────────────
+   `reduced-motion` (HIGH) + `motion-sensitivity`. Framer Motion is
+   handled separately by <MotionConfig reducedMotion="user">; this
+   covers CSS transitions, the marquee, and smooth scrolling. */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .pill:hover,
+  .card:hover,
+  .award-card:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,53 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.*
+
+# Next.js build output
+/.next/
+/out/
+/build
+next-env.d.ts
+
+# Environment — never commit real keys. `.env.example` is the tracked template.
+.env
+.env.local
+.env.*.local
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Deployment
+.vercel
+
+# Editors and OS
+.DS_Store
+*.pem
+Thumbs.db
+
+# ---------------------------------------------------------------------------
+# Video assets — too large for GitHub (the Videography masters alone are ~2GB).
+# Keep them on disk for local `next dev`; host them externally for deploy and
+# point the site at those URLs. Matches both `Public/` (current) and `public/`.
+# ---------------------------------------------------------------------------
+Public/Video files/
+public/Video files/
+Public/Reels/
+public/Reels/
+Public/Main Page Video_*.mp4
+public/Main Page Video_*.mp4
+
+# Catch-all for any other video dropped into the assets tree.
+Public/**/*.mp4
+Public/**/*.mkv
+Public/**/*.mov
+Public/**/*.webm
+Public/**/*.m4v
+public/**/*.mp4
+public/**/*.mkv
+public/**/*.mov
+public/**/*.webm
+public/**/*.m4v
