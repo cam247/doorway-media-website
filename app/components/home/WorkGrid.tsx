@@ -34,7 +34,8 @@ const services: {
     category: "Videography",
     tagline: "Award Winning Videos",
     icon: Camera,
-    video: mediaUrl("videography-reel.mp4"),
+    /* Xavier DNA — not She+, which stays on the videography page only. */
+    video: mediaUrl("25-26_Xavier MBB DNA_V4.mp4"),
   },
   {
     category: "Motion Design & 3D",
