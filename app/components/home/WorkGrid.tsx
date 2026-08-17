@@ -14,15 +14,14 @@ import VideoSequence from "@/app/components/VideoSequence";
 import { mediaUrl } from "@/app/lib/media";
 import type { CategoryName } from "@/app/lib/projects";
 import { categoryHrefs } from "@/app/lib/site-data";
-import { DUR_EXIT, EASE, reveal, stagger, VIEWPORT } from "@/app/lib/motion";
+import { DUR_EXIT, EASE, fade, reveal, VIEWPORT } from "@/app/lib/motion";
 
 /**
- * The core services overview: one panel per service category, each linking into
- * its own page. Individual projects live on those pages, not here.
+ * Core services overview: one panel per category.
  *
- * Display order: Videography, Motion Design & 3D (centre), Drone Video (right).
- *
- * Background clips match each category page and are served from Supabase.
+ * Video layers stay on static DOM nodes. iOS Safari blanks <video> under any
+ * ancestor with a CSS transform (Framer `layout` / slide-up reveal), which is
+ * what made the homepage boxes look empty on phones until you navigated away.
  */
 const services: {
   category: CategoryName;
@@ -34,14 +33,12 @@ const services: {
     category: "Videography",
     tagline: "Award Winning Videos",
     icon: Camera,
-    /* Xavier DNA — not She+, which stays on the videography page only. */
     video: mediaUrl("25-26_Xavier MBB DNA_V4.mp4"),
   },
   {
     category: "Motion Design & 3D",
     tagline: "Design That Moves Brands",
     icon: Boxes,
-    /* Both pieces, Red Bull first, as on /motion-design. */
     video: [
       mediaUrl("Red Bull Short.mp4"),
       mediaUrl("Air Max Short.mp4"),
@@ -55,13 +52,6 @@ const services: {
   },
 ];
 
-/**
- * landing.csv → "Portfolio Grid", section 2.
- *
- * All panels play their own footage; hover only changes which panel is
- * expanded, not whether it is playing. Expansion is driven by pointerenter *and*
- * focus, so keyboard users get the same reveal (`keyboard-navigation`).
- */
 export default function WorkGrid() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
@@ -87,28 +77,25 @@ export default function WorkGrid() {
           </p>
         </motion.header>
 
-        {/* Desktop: expanding panels */}
-        <motion.div
-          variants={reveal}
-          initial="hidden"
-          whileInView="visible"
-          viewport={VIEWPORT}
+        {/* Desktop: expanding panels — flex transition, not Framer layout. */}
+        <div
           onPointerLeave={() => setActiveIndex(null)}
           className="mt-12 hidden h-[440px] gap-3 md:flex"
         >
           {services.map((service, i) => {
             const isExpanded = activeIndex === i;
             return (
-              <motion.div
+              <div
                 key={service.category}
-                layout
-                transition={{ duration: DUR_EXIT, ease: EASE }}
                 onPointerEnter={(e) =>
                   e.pointerType !== "touch" && setActiveIndex(i)
                 }
-                className={`relative h-full overflow-hidden rounded-3xl bg-surface ${
-                  isExpanded ? "flex-[3]" : "flex-[1]"
-                }`}
+                style={{
+                  flexGrow: isExpanded ? 3 : 1,
+                  flexBasis: 0,
+                  transition: `flex-grow ${DUR_EXIT}s cubic-bezier(${EASE.join(",")})`,
+                }}
+                className="relative h-full min-w-0 overflow-hidden rounded-3xl bg-surface"
               >
                 <VideoSequence clips={service.video} />
 
@@ -125,7 +112,6 @@ export default function WorkGrid() {
                   />
                 </div>
 
-                {/* Whole panel is the hit area; the link fills it. */}
                 <Link
                   href={categoryHrefs[service.category] ?? "/#contact"}
                   onFocus={() => setActiveIndex(i)}
@@ -140,7 +126,7 @@ export default function WorkGrid() {
                   </span>
                   <span className="mt-1 flex items-end justify-between gap-4">
                     <span
-                      className={`display-lg text-on-media ${
+                      className={`display-lg text-on-media transition-[font-size] duration-300 ${
                         isExpanded ? "text-3xl md:text-5xl" : "text-base"
                       }`}
                     >
@@ -154,58 +140,59 @@ export default function WorkGrid() {
                     />
                   </span>
                 </Link>
-              </motion.div>
+              </div>
             );
           })}
-        </motion.div>
+        </div>
 
-        {/* Mobile: stacked cards */}
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={VIEWPORT}
-          className="mt-12 grid grid-cols-1 gap-6 md:hidden"
-        >
+        {/* Mobile: stacked cards — video outside any transform animation. */}
+        <div className="mt-12 grid grid-cols-1 gap-6 md:hidden">
           {services.map((service, i) => (
-            <motion.div
+            <div
               key={service.category}
-              custom={i}
-              variants={reveal}
               className="relative aspect-video overflow-hidden rounded-3xl bg-surface"
             >
               <VideoSequence clips={service.video} />
 
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 z-20 bg-gradient-to-t from-black/85 via-black/25 to-transparent"
-              />
-
-              <Link
-                href={categoryHrefs[service.category] ?? "/#contact"}
-                className="on-media absolute inset-0 z-20 flex flex-col justify-between p-5"
+              <motion.div
+                custom={i}
+                variants={fade}
+                initial="hidden"
+                whileInView="visible"
+                viewport={VIEWPORT}
+                className="absolute inset-0 z-20"
               >
-                <span className="glass-strong inline-flex w-fit items-center gap-2 rounded-full px-3.5 py-2 text-xs font-semibold text-fg">
-                  <service.icon
-                    aria-hidden="true"
-                    className="h-4 w-4"
-                    strokeWidth={2}
-                  />
-                  {service.tagline}
-                </span>
-                <span className="flex items-end justify-between gap-4">
-                  <span className="display-lg text-3xl text-on-media">
-                    {service.category}
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"
+                />
+
+                <Link
+                  href={categoryHrefs[service.category] ?? "/#contact"}
+                  className="on-media absolute inset-0 flex flex-col justify-between p-5"
+                >
+                  <span className="glass-strong inline-flex w-fit items-center gap-2 rounded-full px-3.5 py-2 text-xs font-semibold text-fg">
+                    <service.icon
+                      aria-hidden="true"
+                      className="h-4 w-4"
+                      strokeWidth={2}
+                    />
+                    {service.tagline}
                   </span>
-                  <ArrowUpRight
-                    aria-hidden="true"
-                    className="h-6 w-6 shrink-0 text-gold-bright"
-                  />
-                </span>
-              </Link>
-            </motion.div>
+                  <span className="flex items-end justify-between gap-4">
+                    <span className="display-lg text-3xl text-on-media">
+                      {service.category}
+                    </span>
+                    <ArrowUpRight
+                      aria-hidden="true"
+                      className="h-6 w-6 shrink-0 text-gold-bright"
+                    />
+                  </span>
+                </Link>
+              </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
