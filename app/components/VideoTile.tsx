@@ -100,6 +100,30 @@ export default function VideoTile({
     }
   }, [armed, inView, paused, reduceMotion]);
 
+  /*
+   * iOS Safari (and some Android WebViews) leave a <video> black until it has
+   * played or been seeked — preload="metadata" alone is not enough. Nudge to a
+   * hair past zero once data is ready so a paused / reduced-motion tile still
+   * shows a real frame instead of an empty grey box.
+   */
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v || !armed) return;
+
+    const paint = () => {
+      if (v.readyState < 2) return;
+      try {
+        if (v.currentTime < 0.05) v.currentTime = 0.05;
+      } catch {
+        /* Ignore seek errors before the media is seekable. */
+      }
+    };
+
+    v.addEventListener("loadeddata", paint);
+    paint();
+    return () => v.removeEventListener("loadeddata", paint);
+  }, [armed, src]);
+
   return (
     <div ref={wrapRef} className={`absolute inset-0 bg-surface ${className}`}>
       {src && (
