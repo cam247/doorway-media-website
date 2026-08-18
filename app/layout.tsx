@@ -42,17 +42,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
- return (
-      <html lang="en">
-        <GoogleTagManager gtmId="GTM-5Q2C3528" />
-        <body
-          className={`${inter.variable} ${bebasNeue.variable} bg-bg text-fg antial...   
-      <body
-        className={`${inter.variable} ${bebasNeue.variable} bg-bg text-fg antialiased`}
-      >
+      <GoogleTagManager gtmId="GTM-5Q2C3528" />
+      <body className={`${inter.variable} ${bebasNeue.variable} bg-bg text-fg antialiased`}>
         <a
           href="#main"
-          className="glass-strong sr-only rounded-full px-5 py-3 text-sm font-semibold focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50"
+          className="glass-strong sr-only rounded-full px-5 py-3 text-sm font-semibold"
         >
           Skip to content
         </a>
