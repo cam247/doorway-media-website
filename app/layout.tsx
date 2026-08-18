@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Bebas_Neue, Inter } from "next/font/google";
-import "./globals.css";
+import "@/app/globals.css";
 import MotionProvider from "@/app/components/MotionProvider";
 import { GoogleTagManager } from "@next/third-parties/google";
 
@@ -35,14 +35,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    
-      
-      
-        
+    <html lang="en">
+      <GoogleTagManager gtmId="GTM-5Q2C3528" />
+      <body className={`${inter.variable} ${bebasNeue.variable} bg-bg text-fg antialiased`}>
+        <a
+          href="#main"
+          className="glass-strong sr-only rounded-full px-5 py-3 text-sm font-semibold"
+        >
           Skip to content
-        
-        {children}
-      
-    
+        </a>
+        <MotionProvider>{children}</MotionProvider>
+      </body>
+    </html>
   );
 }
